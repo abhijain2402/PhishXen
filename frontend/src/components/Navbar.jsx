@@ -1,39 +1,91 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Shield, Menu, X } from 'lucide-react';
 import Logo from './Logo';
 
 export default function Navbar({ backendStatus, onScanClick }) {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isOnline = backendStatus?.status === 'healthy';
 
+  const navLinks = [
+    { label: 'Scanner', href: '#scanner' },
+    { label: 'How It Works', href: '#how-it-works' },
+    { label: 'Detection', href: '#detection' },
+    { label: 'History', href: '#history' },
+  ];
+
+  const handleLinkClick = () => {
+    setMobileMenuOpen(false);
+  };
+
   return (
-    <nav className="navbar">
+    <header className="navbar">
       <div className="container navbar-inner">
+        {/* Brand */}
         <a href="#top" className="navbar-brand" aria-label="PhishXen Home">
-          <Logo size={22} strokeColor="#171717" accentColor="#B89B5E" />
+          <div className="brand-logo-mark">
+            <Logo size={20} strokeColor="#171717" accentColor="#B89B5E" />
+          </div>
           <span className="brand-wordmark">PHISHXEN</span>
         </a>
 
-        <ul className="navbar-nav">
-          <li><a href="#top" className="nav-link">Home</a></li>
-          <li><a href="#how-it-works" className="nav-link">How It Works</a></li>
-          <li><a href="#analysis" className="nav-link">Analysis</a></li>
-          <li><a href="#about" className="nav-link">About</a></li>
-        </ul>
+        {/* Desktop Navigation */}
+        <nav className="navbar-nav" aria-label="Primary Navigation">
+          {navLinks.map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              className="nav-link"
+              onClick={handleLinkClick}
+            >
+              {item.label}
+            </a>
+          ))}
+        </nav>
 
+        {/* Right Side: Protected by XGBoost */}
         <div className="navbar-actions">
-          <div className="backend-pill" title={isOnline ? 'FastAPI Backend Online' : 'FastAPI Backend Offline'}>
-            <div className={`backend-dot ${isOnline ? 'online' : 'offline'}`} />
-            <span>{isOnline ? 'Backend Ready' : 'Offline'}</span>
+          <div
+            className="protected-badge"
+            title={isOnline ? 'Active Protection • FastAPI & XGBoost V4 Online' : 'Connecting to XGBoost engine...'}
+          >
+            <Shield size={13} className="protected-shield-icon" />
+            <span className="protected-text">Protected by XGBoost</span>
+            <span
+              className={`status-pulse-dot ${isOnline ? 'status-online' : 'status-pending'}`}
+              aria-label={isOnline ? 'Backend Online' : 'Backend Connecting'}
+            />
           </div>
 
+          {/* Mobile Menu Toggle */}
           <button
             type="button"
-            className="btn-nav-cta"
-            onClick={onScanClick}
+            className="mobile-menu-btn"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle Navigation Menu"
+            aria-expanded={mobileMenuOpen}
           >
-            Scan a URL
+            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
       </div>
-    </nav>
+
+      {/* Mobile Dropdown */}
+      {mobileMenuOpen && (
+        <div className="navbar-mobile-drawer">
+          <div className="container mobile-drawer-inner">
+            {navLinks.map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                className="mobile-nav-link"
+                onClick={handleLinkClick}
+              >
+                {item.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+    </header>
   );
 }

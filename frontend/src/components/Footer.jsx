@@ -3,23 +3,42 @@ import Logo from './Logo';
 
 export default function Footer() {
   return (
-    <footer className="footer">
-      <div className="container footer-inner">
-        <div className="footer-left">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Logo size={18} strokeColor="#171717" accentColor="#B89B5E" />
-            <span className="footer-brand-name">PHISHXEN</span>
+    <footer className="site-footer">
+      <div className="container footer-container">
+        <div className="footer-top-row">
+          <div className="footer-brand-col">
+            <div className="footer-brand-header">
+              <Logo size={18} strokeColor="#171717" accentColor="#B89B5E" />
+              <span className="footer-wordmark">PHISHXEN</span>
+            </div>
+            <p className="footer-tagline">
+              AI-Powered URL Security & Webpage Intelligence.
+            </p>
+            <p className="footer-subtext">
+              Engineered with calibrated XGBoost classification and real-time DOM feature extraction.
+            </p>
           </div>
-          <p className="footer-tagline">AI-powered phishing URL detection.</p>
-          <p className="footer-notice">Built for cybersecurity research and threat awareness.</p>
+
+          <div className="footer-nav-col">
+            <span className="footer-nav-heading">Platform</span>
+            <ul className="footer-nav-links">
+              <li><a href="#scanner" className="footer-link">Scanner</a></li>
+              <li><a href="#how-it-works" className="footer-link">How It Works</a></li>
+              <li><a href="#detection" className="footer-link">Detection</a></li>
+              <li><a href="#history" className="footer-link">History</a></li>
+            </ul>
+          </div>
         </div>
 
-        <ul className="footer-links">
-          <li><a href="#top" className="footer-link">Home</a></li>
-          <li><a href="#how-it-works" className="footer-link">How It Works</a></li>
-          <li><a href="#analysis" className="footer-link">Analysis</a></li>
-          <li><a href="#about" className="footer-link">About</a></li>
-        </ul>
+        <div className="footer-bottom-row">
+          <span className="footer-copyright">
+            © {new Date().getFullYear()} PhishXen. All rights reserved.
+          </span>
+          <div className="footer-status-pill">
+            <span className="footer-status-dot" />
+            <span>XGBoost V4 • 18 Signals</span>
+          </div>
+        </div>
       </div>
     </footer>
   );

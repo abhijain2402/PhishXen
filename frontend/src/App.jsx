@@ -40,7 +40,7 @@ export default function App() {
     };
 
     fetchHealth();
-    const interval = setInterval(fetchHealth, 12000);
+    const interval = setInterval(fetchHealth, 15000);
     return () => clearInterval(interval);
   }, []);
 
@@ -92,13 +92,13 @@ export default function App() {
         ].slice(0, 8);
       });
 
-      // Scroll to verdict after brief rendering delay
+      // Scroll smoothly to verdict detection dashboard
       setTimeout(() => {
-        const verdictEl = document.getElementById('verdict');
+        const verdictEl = document.getElementById('detection');
         if (verdictEl) {
           verdictEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
-      }, 100);
+      }, 120);
     } catch (err) {
       setError(err.message || 'Unable to analyze this website.');
     } finally {
@@ -113,11 +113,11 @@ export default function App() {
     setError(null);
 
     setTimeout(() => {
-      const verdictEl = document.getElementById('verdict');
+      const verdictEl = document.getElementById('detection');
       if (verdictEl) {
         verdictEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
-    }, 100);
+    }, 120);
   };
 
   // Clear history
@@ -136,7 +136,7 @@ export default function App() {
       />
 
       <main className="main-content">
-        {/* 1. Hero */}
+        {/* 1. Hero Section */}
         <Hero onScanClick={handleScrollToScanner} />
 
         {/* 2. Main Product Feature: Scanner */}
@@ -149,26 +149,26 @@ export default function App() {
           inputRef={scannerInputRef}
         />
 
-        {/* 3. Verdict & Probability Result */}
+        {/* 3. Security Analysis Verdict Dashboard */}
         {result && <Verdict result={result} />}
 
-        {/* 4. 18 Signals Analysis Matrix */}
+        {/* 4. 18 Security Features Analysis */}
         {result && <FeatureAnalysis features={result.features} />}
 
         {/* 5. How It Works Pipeline */}
         <HowItWorks />
 
-        {/* 6. Measurable Trust Signals */}
+        {/* 6. Measurable Trust / Technology Section */}
         <TrustSignals />
 
-        {/* 7. Scan History */}
+        {/* 7. Local Scan History */}
         <ScanHistory
           history={history}
           onSelect={handleSelectHistory}
           onClear={handleClearHistory}
         />
 
-        {/* 8. About Section */}
+        {/* 8. Technical Methodology / About */}
         <About />
       </main>
 

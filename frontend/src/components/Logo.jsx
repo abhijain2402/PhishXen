@@ -1,40 +1,40 @@
 import React from 'react';
 
 /**
- * Minimalist geometric shield logo with an integrated subtle 'X' motif.
+ * Premium minimalist geometric shield mark with an integrated subtle 'X' motif.
  */
-export default function Logo({ size = 24, strokeColor = '#171717', accentColor = '#B89B5E', className = '' }) {
+export default function Logo({ size = 22, strokeColor = '#171717', accentColor = '#B89B5E', className = '' }) {
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 32 32"
+      viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
-      aria-label="PhishXen Logo"
+      aria-hidden="true"
     >
-      {/* Outer Geometric Shield */}
+      {/* Outer Sleek Shield */}
       <path
-        d="M16 3L6 7V15C6 21.5 10.3 27.2 16 29C21.7 27.2 26 21.5 26 15V7L16 3Z"
+        d="M12 2.5L4.5 5.5V11.5C4.5 16.5 7.7 20.9 12 22C16.3 20.9 19.5 16.5 19.5 11.5V5.5L12 2.5Z"
         stroke={strokeColor}
         strokeWidth="1.75"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      {/* Subtle Inner Intersection / X Element */}
+      {/* Subtle Inner Intersection Accent (X motif) */}
       <path
-        d="M11 11.5L21 20.5"
+        d="M8.5 9L15.5 15"
         stroke={accentColor}
         strokeWidth="1.5"
         strokeLinecap="round"
       />
       <path
-        d="M21 11.5L11 20.5"
+        d="M15.5 9L8.5 15"
         stroke={strokeColor}
         strokeWidth="1.5"
         strokeLinecap="round"
-        strokeOpacity="0.75"
+        strokeOpacity="0.7"
       />
     </svg>
   );

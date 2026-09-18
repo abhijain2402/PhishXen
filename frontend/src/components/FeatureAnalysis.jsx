@@ -1,39 +1,43 @@
 import React from 'react';
+import { Layers, FileCode, Network, Link, Code2, CheckCircle2, MinusCircle, Hash } from 'lucide-react';
 
-const FEATURE_GROUPS = [
+const FEATURE_CATEGORIES = [
   {
-    title: 'URL Lexical',
-    count: '6 Signals',
+    category: 'URL SIGNALS',
+    description: 'Lexical and syntactic attributes derived directly from the URL string',
+    icon: Link,
     features: [
       { key: 'DomainLength', label: 'Domain Length', type: 'number' },
       { key: 'NoOfDegitsInURL', label: 'Digits in URL', type: 'number' },
       { key: 'DegitRatioInURL', label: 'Digit Ratio', type: 'ratio' },
       { key: 'NoOfOtherSpecialCharsInURL', label: 'Special Characters', type: 'number' },
       { key: 'SpacialCharRatioInURL', label: 'Special Character Ratio', type: 'ratio' },
-      { key: 'IsHTTPS', label: 'HTTPS Protocol', type: 'boolean' },
+      { key: 'IsHTTPS', label: 'HTTPS', type: 'boolean' },
     ],
   },
   {
-    title: 'HTML Structure',
-    count: '8 Signals',
+    category: 'PAGE STRUCTURE',
+    description: 'Structural HTML elements and metadata inspected in the live DOM',
+    icon: FileCode,
     features: [
       { key: 'LineOfCode', label: 'Lines of Code', type: 'number' },
-      { key: 'HasFavicon', label: 'Favicon Present', type: 'boolean' },
-      { key: 'IsResponsive', label: 'Responsive Viewport', type: 'boolean' },
-      { key: 'HasDescription', label: 'Meta Description', type: 'boolean' },
-      { key: 'HasSocialNet', label: 'Social Network Links', type: 'boolean' },
+      { key: 'HasFavicon', label: 'Favicon', type: 'boolean' },
+      { key: 'IsResponsive', label: 'Responsive', type: 'boolean' },
+      { key: 'HasDescription', label: 'Description', type: 'boolean' },
+      { key: 'HasSocialNet', label: 'Social Network', type: 'boolean' },
       { key: 'HasSubmitButton', label: 'Submit Button', type: 'boolean' },
-      { key: 'HasHiddenFields', label: 'Hidden Form Fields', type: 'boolean' },
-      { key: 'HasCopyrightInfo', label: 'Copyright Notice', type: 'boolean' },
+      { key: 'HasHiddenFields', label: 'Hidden Fields', type: 'boolean' },
+      { key: 'HasCopyrightInfo', label: 'Copyright', type: 'boolean' },
     ],
   },
   {
-    title: 'Resources & References',
-    count: '4 Signals',
+    category: 'RESOURCE & LINK ANALYSIS',
+    description: 'Static assets and hyperlink topology discovered across the page',
+    icon: Network,
     features: [
-      { key: 'NoOfCSS', label: 'CSS Stylesheets', type: 'number' },
-      { key: 'NoOfJS', label: 'JavaScript Scripts', type: 'number' },
-      { key: 'NoOfSelfRef', label: 'Internal References', type: 'number' },
+      { key: 'NoOfCSS', label: 'CSS', type: 'number' },
+      { key: 'NoOfJS', label: 'JavaScript', type: 'number' },
+      { key: 'NoOfSelfRef', label: 'Self References', type: 'number' },
       { key: 'NoOfExternalRef', label: 'External References', type: 'number' },
     ],
   },
@@ -42,55 +46,103 @@ const FEATURE_GROUPS = [
 export default function FeatureAnalysis({ features }) {
   if (!features || Object.keys(features).length === 0) return null;
 
-  const formatValue = (featureDef, rawVal) => {
-    if (rawVal === undefined || rawVal === null) return '—';
-
-    if (featureDef.type === 'boolean') {
-      const isTrue = Number(rawVal) === 1;
+  const renderValueDisplay = (item, rawVal) => {
+    if (rawVal === undefined || rawVal === null) {
       return (
-        <span className={isTrue ? 'signal-badge-yes' : 'signal-badge-no'}>
-          {isTrue ? 'Yes' : 'No'}
-        </span>
+        <div className="feature-val-group">
+          <span className="feature-empty-val">—</span>
+        </div>
       );
     }
 
-    if (featureDef.type === 'ratio') {
-      return `${(Number(rawVal) * 100).toFixed(1)}%`;
+    if (item.type === 'boolean') {
+      const isTrue = Number(rawVal) === 1;
+      return (
+        <div className="feature-val-group">
+          <span className={`feature-pill-badge ${isTrue ? 'badge-detected' : 'badge-not-detected'}`}>
+            <span className={`pill-indicator-dot ${isTrue ? 'dot-active' : 'dot-inactive'}`} />
+            <span>{isTrue ? 'Detected / Yes' : 'Not detected / No'}</span>
+          </span>
+          <span className="feature-raw-code">({rawVal})</span>
+        </div>
+      );
     }
 
-    return Number(rawVal).toLocaleString();
+    if (item.type === 'ratio') {
+      const numericVal = Number(rawVal);
+      return (
+        <div className="feature-val-group">
+          <span className="feature-numeric-val">{numericVal.toFixed(3)}</span>
+          <span className="feature-unit-tag">ratio</span>
+        </div>
+      );
+    }
+
+    // Standard number
+    const numericVal = Number(rawVal);
+    return (
+      <div className="feature-val-group">
+        <span className="feature-numeric-val">{numericVal.toLocaleString()}</span>
+        <span className="feature-unit-tag">count</span>
+      </div>
+    );
   };
 
   return (
-    <section className="signals-section" id="analysis">
+    <section className="features-section" id="features">
       <div className="container">
-        <div className="section-intro">
-          <h2 className="section-title">18 Signals Behind the Verdict</h2>
-          <p className="section-description">
-            PhishXen evaluates 18 URL and webpage characteristics before generating the final classification.
+        <div className="features-intro-bar">
+          <div className="features-eyebrow">
+            <span className="eyebrow-accent-bar" />
+            <span>XGBOOST FEATURE EXTRACTION MATRIX</span>
+          </div>
+          <h2 className="features-main-title">18 Security Features Analyzed</h2>
+          <p className="features-subtitle">
+            Comprehensive evaluation of lexical URL patterns, DOM structure, and linked resources.
           </p>
         </div>
 
-        <div className="signals-groups-grid">
-          {FEATURE_GROUPS.map((group) => (
-            <div key={group.title} className="signals-card">
-              <div className="signals-group-header">
-                <span className="signals-group-title">{group.title}</span>
-                <span className="signals-count-tag">{group.count}</span>
-              </div>
+        <div className="feature-groups-vertical">
+          {FEATURE_CATEGORIES.map((catGroup) => {
+            const GroupIcon = catGroup.icon;
 
-              <div className="signals-list">
-                {group.features.map((feat) => (
-                  <div key={feat.key} className="signal-row">
-                    <span className="signal-label">{feat.label}</span>
-                    <span className="signal-val">
-                      {formatValue(feat, features[feat.key])}
-                    </span>
+            return (
+              <div key={catGroup.category} className="feature-category-block">
+                <div className="category-header-row">
+                  <div className="category-title-wrap">
+                    <div className="category-icon-box">
+                      <GroupIcon size={16} />
+                    </div>
+                    <div>
+                      <h3 className="category-name">{catGroup.category}</h3>
+                      <p className="category-desc">{catGroup.description}</p>
+                    </div>
                   </div>
-                ))}
+                  <span className="category-count-badge">
+                    {catGroup.features.length} Signals
+                  </span>
+                </div>
+
+                {/* Compact Grid of Feature Cards */}
+                <div className="feature-cards-grid">
+                  {catGroup.features.map((feat) => {
+                    const val = features[feat.key];
+                    return (
+                      <div key={feat.key} className="feature-item-card">
+                        <div className="feature-card-top">
+                          <span className="feature-name">{feat.label}</span>
+                          <span className="feature-key-mono">{feat.key}</span>
+                        </div>
+                        <div className="feature-card-bottom">
+                          {renderValueDisplay(feat, val)}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

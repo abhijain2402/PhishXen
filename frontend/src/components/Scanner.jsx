@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { Link2, ArrowRight, AlertCircle } from 'lucide-react';
+import React from 'react';
+import { Search, Loader2, ArrowRight, AlertTriangle, Globe, Sparkles } from 'lucide-react';
 
 const QUICK_TESTS = [
   { name: 'Wikipedia', url: 'https://www.wikipedia.org' },
@@ -10,85 +10,115 @@ const QUICK_TESTS = [
 export default function Scanner({ url, setUrl, onScan, isScanning, error, inputRef }) {
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (isScanning) return;
+    if (isScanning || !url.trim()) return;
     onScan(url);
   };
 
-  const handleQuickTest = (testUrl) => {
-    setUrl(testUrl);
-    onScan(testUrl);
+  const handleQuickSelect = (quickUrl) => {
+    setUrl(quickUrl);
+    onScan(quickUrl);
   };
 
   return (
     <section className="scanner-section" id="scanner">
       <div className="container">
-        <div className="scanner-container">
-          <div className="scanner-header">
-            <h2 className="scanner-title">Check a website</h2>
-            <p className="scanner-subtext">
-              Enter a URL and PhishXen will analyze its security signals.
+        <div className="scanner-card">
+          {/* Subtle top decorative scanner line */}
+          <div className="scanner-card-accent-line" />
+
+          <div className="scanner-header-block">
+            <div className="scanner-badge">
+              <Sparkles size={13} className="scanner-badge-icon" />
+              <span>Real-time URL Inspector</span>
+            </div>
+            <h2 className="scanner-title">Analyze a URL</h2>
+            <p className="scanner-description">
+              Enter a website URL to check its security.
             </p>
           </div>
 
-          <form onSubmit={handleSubmit}>
-            <div className="scanner-form-box">
-              <Link2 size={18} className="scanner-icon" />
+          <form onSubmit={handleSubmit} className="scanner-form">
+            <div className={`scanner-input-container ${isScanning ? 'is-scanning-active' : ''}`}>
+              <div className="input-prefix-icon">
+                <Globe size={18} />
+              </div>
 
               <input
                 ref={inputRef}
                 type="text"
-                className="scanner-input"
+                className="scanner-url-input"
                 placeholder="https://example.com"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 disabled={isScanning}
                 autoComplete="off"
+                autoCapitalize="off"
                 spellCheck="false"
-                aria-label="Website URL to scan"
+                aria-label="Website URL to analyze"
               />
 
               <button
                 type="submit"
-                className="btn-scan"
-                disabled={isScanning}
+                className="btn-analyze-url"
+                disabled={isScanning || !url.trim()}
+                aria-label="Analyze URL"
               >
-                <span>{isScanning ? 'Analyzing...' : 'Scan URL'}</span>
-                {!isScanning && <ArrowRight size={15} />}
+                {isScanning ? (
+                  <>
+                    <Loader2 size={16} className="btn-spinner" />
+                    <span>Analyzing...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Analyze URL</span>
+                    <ArrowRight size={15} className="btn-arrow-icon" />
+                  </>
+                )}
               </button>
             </div>
           </form>
 
-          {/* Quick Tests Row */}
-          <div className="quick-test-row">
-            <span className="quick-test-label">Quick test:</span>
-            {QUICK_TESTS.map((item) => (
-              <button
-                key={item.name}
-                type="button"
-                className="btn-quick-chip"
-                onClick={() => handleQuickTest(item.url)}
-                disabled={isScanning}
-              >
-                {item.name}
-              </button>
-            ))}
+          {/* Quick Test Links */}
+          <div className="scanner-quick-tests">
+            <span className="quick-test-heading">Sample targets:</span>
+            <div className="quick-test-pills">
+              {QUICK_TESTS.map((item) => (
+                <button
+                  key={item.name}
+                  type="button"
+                  className="quick-pill"
+                  onClick={() => handleQuickSelect(item.url)}
+                  disabled={isScanning}
+                >
+                  <span className="quick-pill-dot" />
+                  {item.name}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Scanning In-Progress Indicator */}
+          {/* Scanning In-Progress Radar Animation */}
           {isScanning && (
-            <div className="scanning-indicator">
-              <div className="scanning-spinner" />
-              <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-                Inspecting DOM signals and evaluating XGBoost V4 features...
-              </span>
+            <div className="scanner-in-progress-card" role="status" aria-live="polite">
+              <div className="scanning-radar-beam" />
+              <div className="scanning-feedback">
+                <div className="scanning-pulse-ring" />
+                <div className="scanning-text-group">
+                  <span className="scanning-primary-msg">Extracting live DOM & lexical security signals...</span>
+                  <span className="scanning-sub-msg">Fetching URL headers, evaluating 18 features via XGBoost classifier</span>
+                </div>
+              </div>
             </div>
           )}
 
-          {/* Error Notice */}
+          {/* Error Alert */}
           {error && !isScanning && (
-            <div className="scan-error-alert" role="alert">
-              <AlertCircle size={17} style={{ flexShrink: 0 }} />
-              <span>{error}</span>
+            <div className="scanner-error-card" role="alert">
+              <AlertTriangle size={18} className="error-icon" />
+              <div className="error-content">
+                <span className="error-title">Analysis Failed</span>
+                <p className="error-desc">{error}</p>
+              </div>
             </div>
           )}
         </div>
